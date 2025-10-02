@@ -1,9 +1,9 @@
 # SQL AI - Natural Language to Database Query
 
 ## Demo
-![Image](https://github.com/user-attachments/assets/d8680853-48ab-4627-8dcc-7e87f018aa4d)
-![Image](https://github.com/user-attachments/assets/9f8e746f-4f7b-44a0-9340-8d9e1ffbcfe6)
-![Image](https://github.com/user-attachments/assets/f7e2740c-9925-4601-a09e-03efd7932c48)
+![Image](https://github.com/user-attachments/assets/10d74c6d-6bce-45d2-a991-564525ce868d)
+![Image](https://github.com/user-attachments/assets/9afc7be4-332d-43ba-add5-e340c8f98ff2)
+![Image](https://github.com/user-attachments/assets/76271900-b824-4547-8e5a-eb90c3aab2de)
 
 > Transform natural language questions into SQL queries and get instant results - built for non-technical users who need data but don't know SQL.
 
@@ -24,11 +24,11 @@
 
 <!-- Performance comparison images -->
 **Without Prompting (Baseline):**
-<img width="636" height="165" alt="Image" src="https://github.com/user-attachments/assets/4ca766d3-3ccd-43e1-a534-25f87479d597" />
+<img width="636" height="165" alt="Image" src="https://github.com/user-attachments/assets/629d3175-fd9a-43e5-94fc-df0fab41a98b" />
 - **3.0s** - Fast but <1% accuracy
 
 **With Prompting (Accuracy Focus):**
-<img width="635" height="165" alt="Image" src="https://github.com/user-attachments/assets/3372102f-1078-4f02-8176-260b4c47b0b3" />
+<img width="635" height="165" alt="Image" src="https://github.com/user-attachments/assets/ef350ddb-3b66-4750-bc0d-b317607105b4" />
 - **6.5s** - Slower but 95%+ accuracy
 
 **With Prompting + Optimization (Best Balance):**

@@ -1,0 +1,17 @@
+---
+
+## Additional Context
+
+- Database Type: {database_type}
+- Max Result Limit: {max_limit}
+
+## Response Instructions
+
+1. Analyze the user request carefully
+2. Identify required tables and columns from the schema
+3. all pk is "id", fk is "table_name_id"
+4. Generate the most efficient query possible
+5. Add LIMIT clause if no limit is specified (default: 100)
+6. Return ONLY the SQL query
+
+Generate the SQL query now:

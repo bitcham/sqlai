@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: sqlai
+
+  # DataSource Configuration (H2 in-memory for development)
+  datasource:
+    url: jdbc:h2:mem:sqlai;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: create  # Auto-create JPA entity tables
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true  # Run data.sql after Hibernate DDL
+
+  # SQL Initialization (test data)
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:sqlai_test_database.sql
+
+# Application-specific configuration
+datasource:
+  type: jdbc  # jdbc | csv (introspector strategy)
+
+# AI Provider Configuration
+# API keys MUST be provided via environment variables (NEVER hardcode)
+# Example: export CLAUDE_API_KEY=sk-ant-xxx
+ai:
+  provider: GEMINI  # CLAUDE | OPENAI | GEMINI # for test code - CLAUDE SET
+  providers:
+    claude:
+      api-key: ${CLAUDE_API_KEY:}  # Empty default - fails validation if not set
+      model: claude
+      max-tokens: 100
+      temperature: 0.0
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      model: gpt
+      max-tokens: 100
+      temperature: 0.0
+    gemini:
+      api-key: ${GEMINI_API_KEY:}
+      model: gemini
+      max-tokens: 100
+      temperature: 0.0
+
+# Query Execution Policy Configuration
+# Safety features for automatic query execution
+execution:
+  max-execution-time-ms: 30000  # 30 seconds timeout
+  max-row-limit: 1000           # Maximum rows returned
+  allowed-operations:
+    - SELECT                    # Only SELECT for safety (no INSERT/UPDATE/DELETE)
+  query-timeout-seconds: 30     # JDBC statement timeout
+
+# Prompt Builder Configuration
+prompt:
+  database-type: H2  # H2 | POSTGRESQL | MYSQL
+
+# HTTP Client Configuration (Security & Performance)
+# Used by RestTemplate when calling external AI Provider APIs
+http:
+  client:
+    connect-timeout: 5000          # 5 seconds - connection timeout (DoS prevention)
+    read-timeout: 30000            # 30 seconds - read timeout (AI API can be slow)
+    connection-request-timeout: 3000  # 3 seconds - connection pool timeout
+    max-total-connections: 100     # Connection pool size
+    max-connections-per-route: 20  # Per-host connection limit

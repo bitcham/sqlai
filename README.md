@@ -24,15 +24,21 @@
 
 <!-- Performance comparison images -->
 **Without Prompting (Baseline):**
+
 <img width="636" height="165" alt="Image" src="https://github.com/user-attachments/assets/629d3175-fd9a-43e5-94fc-df0fab41a98b" />
+
 - **3.0s** - Fast but <1% accuracy
 
 **With Prompting (Accuracy Focus):**
+
 <img width="635" height="165" alt="Image" src="https://github.com/user-attachments/assets/ef350ddb-3b66-4750-bc0d-b317607105b4" />
+
 - **6.5s** - Slower but 95%+ accuracy
 
 **With Prompting + Optimization (Best Balance):**
+
 <img width="640" height="176" alt="Image" src="https://github.com/user-attachments/assets/216d0206-b3a4-4faf-bd4c-30ffe727a6e5" />
+
 - **4.22s** - 35% faster than prompting alone, maintains 95%+ accuracy
 
 ### Accuracy: <1% → 95%+

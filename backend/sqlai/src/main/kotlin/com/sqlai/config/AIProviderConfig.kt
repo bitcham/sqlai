@@ -1,7 +1,6 @@
 package com.sqlai.config
 
 import com.sqlai.provider.AIProvider
-import com.sqlai.domain.ai.AIProviderType
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean

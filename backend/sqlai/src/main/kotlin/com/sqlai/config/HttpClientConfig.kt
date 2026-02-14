@@ -1,6 +1,7 @@
 package com.sqlai.config
 
 import org.apache.hc.client5.http.classic.HttpClient
+import org.apache.hc.client5.http.config.ConnectionConfig
 import org.apache.hc.client5.http.config.RequestConfig
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager
@@ -41,14 +42,18 @@ class HttpClientConfig(
     @Bean("aiProviderRestTemplate")
     fun restTemplate(): RestTemplate {
         // Connection pool configuration
+        val connectionConfig = ConnectionConfig.custom()
+            .setConnectTimeout(Timeout.ofMilliseconds(properties.connectTimeout.toLong()))
+            .build()
+
         val connectionManager = PoolingHttpClientConnectionManager().apply {
             maxTotal = properties.maxTotalConnections
             defaultMaxPerRoute = properties.maxConnectionsPerRoute
+            setDefaultConnectionConfig(connectionConfig)
         }
 
         // Timeout configuration (security: prevent infinite waits)
         val requestConfig = RequestConfig.custom()
-            .setConnectTimeout(Timeout.ofMilliseconds(properties.connectTimeout.toLong()))
             .setResponseTimeout(Timeout.ofMilliseconds(properties.readTimeout.toLong()))
             .setConnectionRequestTimeout(Timeout.ofMilliseconds(properties.connectionRequestTimeout.toLong()))
             .build()

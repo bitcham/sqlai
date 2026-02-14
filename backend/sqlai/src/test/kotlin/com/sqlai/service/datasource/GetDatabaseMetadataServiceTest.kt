@@ -1,6 +1,7 @@
 package com.sqlai.service.datasource
 
 import com.sqlai.repository.DatabaseMetadataRepository
+import com.sqlai.repository.TableMetadataRepository
 import com.sqlai.domain.datasource.ColumnMetadata
 import com.sqlai.domain.datasource.DatabaseMetadata
 import com.sqlai.domain.datasource.TableMetadata
@@ -15,11 +16,13 @@ import io.mockk.verify
 class GetDatabaseMetadataServiceTest : FunSpec({
 
     lateinit var metadataRepository: DatabaseMetadataRepository
+    lateinit var tableMetadataRepository: TableMetadataRepository
     lateinit var service: GetDatabaseMetadataService
 
     beforeEach {
         metadataRepository = mockk()
-        service = GetDatabaseMetadataService(metadataRepository)
+        tableMetadataRepository = mockk()
+        service = GetDatabaseMetadataService(metadataRepository, tableMetadataRepository)
     }
 
     afterEach {
@@ -49,7 +52,8 @@ class GetDatabaseMetadataServiceTest : FunSpec({
                 tables.add(table)
             }
 
-            every { metadataRepository.findAll() } returns listOf(metadata)
+            every { metadataRepository.findFirstWithTables() } returns metadata
+            every { tableMetadataRepository.findAllWithColumns(metadata.tables) } returns metadata.tables
 
             // when
             val result = service.execute()
@@ -61,12 +65,13 @@ class GetDatabaseMetadataServiceTest : FunSpec({
             result?.tables?.first()?.tableName shouldBe "users"
             result?.tables?.first()?.columns?.size shouldBe 2
 
-            verify(exactly = 1) { metadataRepository.findAll() }
+            verify(exactly = 1) { metadataRepository.findFirstWithTables() }
+            verify(exactly = 1) { tableMetadataRepository.findAllWithColumns(metadata.tables) }
         }
 
         test("should return null when no metadata exists") {
             // given
-            every { metadataRepository.findAll() } returns emptyList()
+            every { metadataRepository.findFirstWithTables() } returns null
 
             // when
             val result = service.execute()
@@ -74,15 +79,15 @@ class GetDatabaseMetadataServiceTest : FunSpec({
             // then
             result shouldBe null
 
-            verify(exactly = 1) { metadataRepository.findAll() }
+            verify(exactly = 1) { metadataRepository.findFirstWithTables() }
+            verify(exactly = 0) { tableMetadataRepository.findAllWithColumns(any()) }
         }
 
-        test("should return first metadata when multiple exist (edge case)") {
+        test("should return metadata from findFirstWithTables (single result)") {
             // given
-            val metadata1 = DatabaseMetadata(schemaName = "db1")
-            val metadata2 = DatabaseMetadata(schemaName = "db2")
+            val metadata = DatabaseMetadata(schemaName = "db1")
 
-            every { metadataRepository.findAll() } returns listOf(metadata1, metadata2)
+            every { metadataRepository.findFirstWithTables() } returns metadata
 
             // when
             val result = service.execute()
@@ -91,14 +96,15 @@ class GetDatabaseMetadataServiceTest : FunSpec({
             result shouldNotBe null
             result?.schemaName shouldBe "db1"
 
-            verify(exactly = 1) { metadataRepository.findAll() }
+            verify(exactly = 1) { metadataRepository.findFirstWithTables() }
+            verify(exactly = 0) { tableMetadataRepository.findAllWithColumns(any()) }
         }
 
         test("should return metadata with empty tables list") {
             // given
             val emptyMetadata = DatabaseMetadata(schemaName = "empty_db")
 
-            every { metadataRepository.findAll() } returns listOf(emptyMetadata)
+            every { metadataRepository.findFirstWithTables() } returns emptyMetadata
 
             // when
             val result = service.execute()
@@ -108,7 +114,8 @@ class GetDatabaseMetadataServiceTest : FunSpec({
             result?.schemaName shouldBe "empty_db"
             result?.tables?.size shouldBe 0
 
-            verify(exactly = 1) { metadataRepository.findAll() }
+            verify(exactly = 1) { metadataRepository.findFirstWithTables() }
+            verify(exactly = 0) { tableMetadataRepository.findAllWithColumns(any()) }
         }
     }
 
@@ -132,7 +139,8 @@ class GetDatabaseMetadataServiceTest : FunSpec({
                 tables.add(ordersTable)
             }
 
-            every { metadataRepository.findAll() } returns listOf(mysqlMetadata)
+            every { metadataRepository.findFirstWithTables() } returns mysqlMetadata
+            every { tableMetadataRepository.findAllWithColumns(mysqlMetadata.tables) } returns mysqlMetadata.tables
 
             // when
             val result = service.execute()
@@ -163,7 +171,8 @@ class GetDatabaseMetadataServiceTest : FunSpec({
                 tables.add(salesTable)
             }
 
-            every { metadataRepository.findAll() } returns listOf(csvMetadata)
+            every { metadataRepository.findFirstWithTables() } returns csvMetadata
+            every { tableMetadataRepository.findAllWithColumns(csvMetadata.tables) } returns csvMetadata.tables
 
             // when
             val result = service.execute()
@@ -178,7 +187,7 @@ class GetDatabaseMetadataServiceTest : FunSpec({
 
         test("should handle case where metadata has not been synced yet") {
             // given
-            every { metadataRepository.findAll() } returns emptyList()
+            every { metadataRepository.findFirstWithTables() } returns null
 
             // when
             val result = service.execute()
@@ -186,7 +195,8 @@ class GetDatabaseMetadataServiceTest : FunSpec({
             // then
             result shouldBe null
 
-            verify(exactly = 1) { metadataRepository.findAll() }
+            verify(exactly = 1) { metadataRepository.findFirstWithTables() }
+            verify(exactly = 0) { tableMetadataRepository.findAllWithColumns(any()) }
         }
 
         test("should retrieve metadata with complex schema") {
@@ -211,7 +221,8 @@ class GetDatabaseMetadataServiceTest : FunSpec({
                 tables.add(ordersTable)
             }
 
-            every { metadataRepository.findAll() } returns listOf(complexMetadata)
+            every { metadataRepository.findFirstWithTables() } returns complexMetadata
+            every { tableMetadataRepository.findAllWithColumns(complexMetadata.tables) } returns complexMetadata.tables
 
             // when
             val result = service.execute()
@@ -231,14 +242,14 @@ class GetDatabaseMetadataServiceTest : FunSpec({
         test("should be read-only transaction") {
             // given
             val metadata = DatabaseMetadata(schemaName = "readonly_db")
-            every { metadataRepository.findAll() } returns listOf(metadata)
+            every { metadataRepository.findFirstWithTables() } returns metadata
 
             // when
             val result = service.execute()
 
             // then
             result shouldNotBe null
-            verify(exactly = 1) { metadataRepository.findAll() }
+            verify(exactly = 1) { metadataRepository.findFirstWithTables() }
             // Note: @Transactional(readOnly = true) behavior is tested via integration tests
         }
     }

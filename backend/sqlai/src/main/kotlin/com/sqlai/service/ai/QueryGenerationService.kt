@@ -1,8 +1,8 @@
 package com.sqlai.service.ai
 
-import com.sqlai.provider.AIProvider
 import com.sqlai.domain.ai.SqlGenerationResult
 import com.sqlai.dto.ExecutionStatus
+import com.sqlai.provider.AIProvider
 import com.sqlai.service.datasource.GetDatabaseMetadataService
 import com.sqlai.service.query.QueryExecutionService
 import org.slf4j.LoggerFactory

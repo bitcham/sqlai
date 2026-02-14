@@ -29,4 +29,14 @@ interface TableMetadataRepository : JpaRepository<TableMetadata, Long> {
      */
     @Query("SELECT t FROM TableMetadata t WHERE t.id IN (SELECT t2.id FROM DatabaseMetadata m JOIN m.tables t2 WHERE m.id = :metadataId) AND t.tableName = :tableName")
     fun findByMetadataIdAndTableName(@Param("metadataId") metadataId: Long, @Param("tableName") tableName: String): TableMetadata?
+
+    /**
+     * Find all tables with their columns eagerly loaded (Query 2 of 2-step fetch)
+     * Used together with DatabaseMetadataRepository.findFirstWithTables() to avoid
+     * both N+1 and Cartesian product problems
+     * @param tables the tables to load columns for
+     * @return list of tables with columns loaded
+     */
+    @Query("SELECT DISTINCT t FROM TableMetadata t LEFT JOIN FETCH t.columns WHERE t IN :tables")
+    fun findAllWithColumns(@Param("tables") tables: List<TableMetadata>): List<TableMetadata>
 }

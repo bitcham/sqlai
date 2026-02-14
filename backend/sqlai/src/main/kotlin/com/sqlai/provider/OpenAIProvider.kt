@@ -1,7 +1,6 @@
 package com.sqlai.provider
 
 import com.sqlai.config.AIProviderProperties
-import com.sqlai.provider.AIProvider
 import com.sqlai.domain.ai.AIProviderType
 import com.sqlai.domain.ai.SqlGenerationResult
 import org.slf4j.LoggerFactory
@@ -79,8 +78,8 @@ class OpenAIProvider(
         return config.apiKey.isNotBlank()
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun extractSqlFromResponse(response: Map<*, *>): String {
-        @Suppress("UNCHECKED_CAST")
         val choices = response["choices"] as? List<Map<String, Any>>
             ?: throw IllegalStateException("Invalid response format from OpenAI")
 
@@ -105,8 +104,8 @@ class OpenAIProvider(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun extractExplanationFromResponse(response: Map<*, *>): String? {
-        @Suppress("UNCHECKED_CAST")
         val choices = response["choices"] as? List<Map<String, Any>> ?: return null
         val firstChoice = choices.firstOrNull() ?: return null
         val message = firstChoice["message"] as? Map<String, Any> ?: return null

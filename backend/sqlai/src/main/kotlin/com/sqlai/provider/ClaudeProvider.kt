@@ -1,7 +1,6 @@
 package com.sqlai.provider
 
 import com.sqlai.config.AIProviderProperties
-import com.sqlai.provider.AIProvider
 import com.sqlai.domain.ai.AIProviderType
 import com.sqlai.domain.ai.SqlGenerationResult
 import org.slf4j.LoggerFactory

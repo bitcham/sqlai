@@ -47,9 +47,9 @@ ai:
       max-tokens: 100
       temperature: 0.0
     gemini:
-      api-key: ${GEMINI_API_KEY:}
-      model: gemini
-      max-tokens: 100
+      api-key: ${GEMINI_API_KEY:dummy-key-for-dev}
+      model: gemini-2.0-flash-lite
+      max-tokens: 10000
       temperature: 0.0
 
 # Query Execution Policy Configuration

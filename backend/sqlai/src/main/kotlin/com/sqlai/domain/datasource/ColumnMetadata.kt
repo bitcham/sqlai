@@ -35,7 +35,6 @@ class ColumnMetadata(
     @Column(name = "id")
     var id: Long? = null
         protected set
-
     init {
         require(columnName.isNotBlank()) { "Column name must not be blank" }
         require(dataType.isNotBlank()) { "Data type must not be blank" }
@@ -50,21 +49,11 @@ class ColumnMetadata(
             }
         }
     }
-
-    /**
-     * Check if this column has a foreign key relationship
-     * Returns true only when both referencedTable and referencedColumn are set
-     */
     fun hasForeignKeyRelation(): Boolean {
         return isForeignKey &&
                 !referencedTable.isNullOrBlank() &&
                 !referencedColumn.isNullOrBlank()
     }
-
-    /**
-     * Get the foreign key reference as a formatted string
-     * Returns null if not a foreign key
-     */
     fun getForeignKeyReference(): String? {
         return if (hasForeignKeyRelation()) {
             "$referencedTable.$referencedColumn"

@@ -6,7 +6,6 @@ import com.sqlai.domain.datasource.DatabaseMetadata
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import java.nio.charset.StandardCharsets
-import kotlin.math.log
 
 /**
  * Service for building AI prompts from templates
@@ -45,7 +44,7 @@ class PromptBuilder(
         val prompt = StringBuilder()
 
         // Add prefix with placeholders replaced
-        //prompt.append(prefixTemplate)
+        prompt.append(prefixTemplate)
         prompt.append("\n\n")
 
         // Add user input section
@@ -61,7 +60,7 @@ class PromptBuilder(
         prompt.append("\n\n")
 
         // Add suffix with placeholders replaced
-        //prompt.append(replacePlaceholders(suffixTemplate, userInput, schemaText))
+        prompt.append(replacePlaceholders(suffixTemplate, userInput, schemaText))
 
         return prompt.toString()
     }

@@ -1,9 +1,9 @@
 package com.sqlai.service.datasource
 
+import com.sqlai.domain.datasource.DatabaseMetadata
+import com.sqlai.exception.MetadataSyncException
 import com.sqlai.provider.DatabaseIntrospector
 import com.sqlai.repository.DatabaseMetadataRepository
-import com.sqlai.exception.MetadataSyncException
-import com.sqlai.domain.datasource.DatabaseMetadata
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

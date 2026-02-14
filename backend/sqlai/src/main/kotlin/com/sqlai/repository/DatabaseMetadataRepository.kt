@@ -26,15 +26,4 @@ interface DatabaseMetadataRepository : JpaRepository<DatabaseMetadata, Long> {
     @Query("SELECT DISTINCT m FROM DatabaseMetadata m LEFT JOIN FETCH m.tables")
     fun findFirstWithTables(): DatabaseMetadata?
 
-    /**
-     * Find metadata with full hierarchy (tables + columns) eagerly loaded
-     * Use this for queries that need complete metadata structure
-     * @return DatabaseMetadata with tables and columns, null if not found
-     */
-    @Query("""
-        SELECT DISTINCT m FROM DatabaseMetadata m
-        LEFT JOIN FETCH m.tables t
-        LEFT JOIN FETCH t.columns
-    """)
-    fun findFirstWithTablesAndColumns(): DatabaseMetadata?
 }

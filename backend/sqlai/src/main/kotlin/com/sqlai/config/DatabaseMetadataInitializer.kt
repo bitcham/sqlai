@@ -1,7 +1,7 @@
 package com.sqlai.config
 
-import com.sqlai.service.datasource.SyncDatabaseMetadataService
 import com.sqlai.exception.MetadataSyncException
+import com.sqlai.service.datasource.SyncDatabaseMetadataService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner

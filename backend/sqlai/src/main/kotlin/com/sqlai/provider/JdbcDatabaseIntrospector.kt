@@ -1,14 +1,13 @@
 package com.sqlai.provider
 
-import com.sqlai.exception.MetadataSyncException
 import com.sqlai.domain.datasource.ColumnMetadata
 import com.sqlai.domain.datasource.DatabaseMetadata
 import com.sqlai.domain.datasource.TableMetadata
+import com.sqlai.exception.MetadataSyncException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import java.sql.DatabaseMetaData
-import java.sql.ResultSet
 import javax.sql.DataSource
 
 /**

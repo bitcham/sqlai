@@ -28,6 +28,7 @@ class JdbcDatabaseIntrospectorTest : FunSpec({
         every { dataSource!!.connection } returns connection!!
         every { connection!!.metaData } returns metaData!!
         every { connection!!.close() } just Runs
+        every { connection!!.schema } returns null
     }
 
     afterTest {
@@ -38,7 +39,7 @@ class JdbcDatabaseIntrospectorTest : FunSpec({
 
         test("should extract database metadata with single table") {
             // given
-            val schema = "test_db"
+            val schema = "TEST_DB"
             val tablesResultSet = mockk<ResultSet>()
             val columnsResultSet = mockk<ResultSet>()
             val primaryKeysResultSet = mockk<ResultSet>()
@@ -100,7 +101,7 @@ class JdbcDatabaseIntrospectorTest : FunSpec({
 
         test("should extract metadata with multiple tables") {
             // given
-            val schema = "test_db"
+            val schema = "TEST_DB"
             val tablesResultSet = mockk<ResultSet>()
             val usersColumnsResultSet = mockk<ResultSet>()
             val ordersColumnsResultSet = mockk<ResultSet>()
@@ -180,7 +181,7 @@ class JdbcDatabaseIntrospectorTest : FunSpec({
 
         test("should handle empty database (no tables)") {
             // given
-            val schema = "empty_db"
+            val schema = "EMPTY_DB"
             val tablesResultSet = mockk<ResultSet>()
 
             every { metaData!!.connection } returns connection!!
@@ -202,7 +203,7 @@ class JdbcDatabaseIntrospectorTest : FunSpec({
 
         test("should extract nullable columns correctly") {
             // given
-            val schema = "test_db"
+            val schema = "TEST_DB"
             val tablesResultSet = mockk<ResultSet>()
             val columnsResultSet = mockk<ResultSet>()
             val primaryKeysResultSet = mockk<ResultSet>()
@@ -264,7 +265,7 @@ class JdbcDatabaseIntrospectorTest : FunSpec({
 
         test("should throw MetadataSyncException when getTables() fails") {
             // given
-            val schema = "test_db"
+            val schema = "TEST_DB"
             every { metaData!!.connection } returns connection!!
             every { connection!!.catalog } returns schema
             every { metaData!!.getTables(null, schema, "%", arrayOf("TABLE")) } throws RuntimeException("Access denied")
@@ -298,7 +299,7 @@ class JdbcDatabaseIntrospectorTest : FunSpec({
 
         test("should filter out VIEWs and only extract TABLEs") {
             // given - Verify that only arrayOf("TABLE") is passed to getTables()
-            val schema = "production_db"
+            val schema = "PRODUCTION_DB"
             val tablesResultSet = mockk<ResultSet>()
             val columnsResultSet = mockk<ResultSet>()
             val primaryKeysResultSet = mockk<ResultSet>()

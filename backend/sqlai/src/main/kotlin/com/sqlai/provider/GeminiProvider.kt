@@ -1,7 +1,6 @@
 package com.sqlai.provider
 
 import com.sqlai.config.AIProviderProperties
-import com.sqlai.provider.AIProvider
 import com.sqlai.domain.ai.AIProviderType
 import com.sqlai.domain.ai.SqlGenerationResult
 import org.slf4j.LoggerFactory
@@ -81,8 +80,8 @@ class GeminiProvider(
         return config.apiKey.isNotBlank()
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun extractSqlFromResponse(response: Map<*, *>): String {
-        @Suppress("UNCHECKED_CAST")
         val candidates = response["candidates"] as? List<Map<String, Any>>
             ?: throw IllegalStateException("Invalid response format from Gemini")
 
@@ -113,8 +112,8 @@ class GeminiProvider(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun extractExplanationFromResponse(response: Map<*, *>): String? {
-        @Suppress("UNCHECKED_CAST")
         val candidates = response["candidates"] as? List<Map<String, Any>> ?: return null
         val firstCandidate = candidates.firstOrNull() ?: return null
         val content = firstCandidate["content"] as? Map<String, Any> ?: return null
